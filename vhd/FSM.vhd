@@ -8,8 +8,8 @@ port( start : in std_logic ;
 		clk : in std_logic;
 		rst : in std_logic;
 		--
-		--etat : out unsigned(4 downto 1);
-		sel : out std_logic;
+		
+		sel , en_decal : out std_logic;
 		num_rot : out std_logic;
 		en_rot : out std_logic
 		);
@@ -18,7 +18,7 @@ end FSM;
 
 architecture Behavioral of FSM is
 ----
-type state is (IDLE,SKINIT,ROT01,LOAD,ROT11,ROT02,FINCLEF,LOADMOT,CALC);
+type state is (IDLE,SKINIT,ROT01,LOAD,ROT11,ROT02,ROT03,FINCLEF,LOADMOT,CALC,ROT04);
 
 signal current_state : state ;
 signal next_state : state ;
@@ -50,6 +50,7 @@ case current_state is
 		num_rot <= '0';
 		en_rot <= '0';
 		sel <= '0';
+		en_decal <= '0';
 	when SKINIT => 
 		next_state <= ROT01;
 		--etat <= "0001";
@@ -59,6 +60,7 @@ case current_state is
 		en_rot<='0';
 		num_rot<='0';
 		sel <= '0';
+		en_decal <= '0';
 	when ROT01 =>
 		next_state <= LOAD;
 		--etat <= "0010";
@@ -67,7 +69,8 @@ case current_state is
 		next_c3<=current_c3;
 		en_rot <='1';
 		num_rot<='0';
-		sel <= '1';
+		sel <= '0';
+		en_decal <= '0';
 	when LOAD => -- en SIPO
 		next_state <= ROT11;
 		--etat <= "0011";
@@ -77,6 +80,7 @@ case current_state is
 		en_rot <='1';
 		num_rot<='0';
 		sel <= '1';
+		en_decal <= '1';
 	when ROT11 =>
 		if current_c1 < 5 then
 		next_state <= ROT11;
@@ -90,11 +94,22 @@ case current_state is
 		num_rot<='1';
 		en_rot <='1';
 		sel <= '1';
-	when ROT02 =>
+		en_decal <= '1';
+	when ROT02 =>	
+		   next_state <= ROT03;
+			next_c2 <= current_c2 ;
+			next_c1 <= "000";
+			--etat <= "0101";
+			next_c3<=current_c3;
+			num_rot<='0';
+			en_rot<='1';
+			sel <= '1';
+			en_decal <= '1';
+		when ROT03 =>
 		if current_c2<1 then
 		next_state <= ROT11;
 		else 
-		next_state <= FINCLEF;
+		next_state <= ROT04;
 		end if;
 			next_c2 <= current_c2 + 1 ;
 			next_c1 <= "000";
@@ -103,6 +118,19 @@ case current_state is
 			num_rot<='0';
 			en_rot<='1';
 			sel <= '1';
+			en_decal <= '1';
+			
+	  	when ROT04 =>	
+		   next_state <= FINCLEF;
+			next_c2 <= current_c2 ;
+			next_c1 <= "000";
+			--etat <= "0101";
+			next_c3<=current_c3;
+			num_rot<='0';
+			en_rot<='1';
+			sel <= '1';
+			en_decal <= '0';
+			
 	when FINCLEF =>
 		next_state <= LOADMOT;
 		--etat <= "0110";
@@ -112,6 +140,7 @@ case current_state is
 		en_rot<='0';
 		num_rot<='0';
 		sel <= '1';
+			en_decal <= '0';
 	when LOADMOT =>
 		next_state <= CALC;
 		--etat <= "0111";
@@ -121,6 +150,7 @@ case current_state is
 		en_rot<='0';
 		num_rot<='0';	
 		sel <= '1';
+			en_decal <= '0';
 	when CALC =>
 		if current_c3 < 15 then
 			next_state <= CALC;
@@ -134,6 +164,7 @@ case current_state is
 			en_rot<='0';
 			num_rot<='0';	
 			sel <= '1';
+				en_decal <= '0';
 	when others =>
 		next_state <= IDLE;
 		next_c1<="000";
@@ -142,6 +173,7 @@ case current_state is
 		en_rot<='0';
 		num_rot<='1';
 		sel <= '1';
+			en_decal <= '0';
 		--etat<="0000";
 	end case;
 	

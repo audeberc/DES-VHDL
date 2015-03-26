@@ -25,14 +25,14 @@ begin
 		if (clk'event and clk='1' and en_rot = '1') then
 				if(num_rot = '0') then
 						rotnumb <= 1;
-						rotated_l <= rotate_left(unsigned(data_l) ,rotnumb );
-						rotated_r <= rotate_left(unsigned(data_r) ,rotnumb);
+						rotated_l <= rotate_right(unsigned(data_l) ,rotnumb );
+						rotated_r <= rotate_right(unsigned(data_r) ,rotnumb);
 --						rotated_l <=(others=>'1');
 --						rotated_r <=(others=>'0');
 				else
 						rotnumb <= 2;
-						rotated_l <= rotate_left(unsigned(data_l), rotnumb);
-						rotated_r <= rotate_left(unsigned(data_r), rotnumb);
+						rotated_l <= rotate_right(unsigned(data_l), rotnumb);
+						rotated_r <= rotate_right(unsigned(data_r), rotnumb);
 --						rotated_l <=(others=>'0');
 --						rotated_r <=(others=>'1');
 				end if;

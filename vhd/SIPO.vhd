@@ -82,24 +82,24 @@ begin
 		end if;
 end process;
  
- subkey_1 <= reg_1;
- subkey_2 <= reg_2;
- subkey_3 <= reg_3;
- subkey_4 <= reg_4;
+ subkey_16 <= reg_1;
+ subkey_15 <= reg_2;
+ subkey_14 <= reg_3;
+ subkey_13 <= reg_4;
 
- subkey_5 <= reg_5;
- subkey_6 <= reg_6;
- subkey_7 <= reg_7;
- subkey_8 <= reg_8;
+ subkey_12 <= reg_5;
+ subkey_11 <= reg_6;
+ subkey_10 <= reg_7;
+ subkey_9 <= reg_8;
  
- subkey_9 <= reg_9;
- subkey_10 <= reg_10;
- subkey_11 <= reg_11;
- subkey_12 <= reg_12;
+ subkey_8 <= reg_9;
+ subkey_7 <= reg_10;
+ subkey_6 <= reg_11;
+ subkey_5 <= reg_12;
 
- subkey_13 <= reg_13;
- subkey_14 <= reg_14;
- subkey_15 <= reg_15;
- subkey_16 <= reg_16;
+ subkey_4 <= reg_13;
+ subkey_3 <= reg_14;
+ subkey_2 <= reg_15;
+ subkey_1 <= reg_16;
 
 end behavior;

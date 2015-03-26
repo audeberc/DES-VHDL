@@ -7,13 +7,30 @@ ARCHITECTURE behavior OF topmodulebench IS
  
     COMPONENT topmodule
     PORT(
-         start : IN  std_logic;
-         clk : IN  std_logic;
-         rst : IN  std_logic;
-         data_l : IN  std_logic_vector(28 downto 1);
-         data_r : IN  std_logic_vector(28 downto 1);
-         rotated_out_l : OUT  std_logic_vector(28 downto 1);
-         rotated_out_r : OUT  std_logic_vector(28 downto 1)
+        start : in std_logic ;
+		clk : in std_logic;
+		rst : in std_logic;
+		key	: in  std_logic_vector(64 downto 1);
+			
+		subkey_1	: out std_logic_vector(48 downto 1);
+		subkey_2	: out std_logic_vector(48 downto 1);
+		subkey_3	: out std_logic_vector(48 downto 1);
+		subkey_4	: out std_logic_vector(48 downto 1);
+
+		subkey_5	: out std_logic_vector(48 downto 1);
+		subkey_6	: out std_logic_vector(48 downto 1);
+		subkey_7	: out std_logic_vector(48 downto 1);
+		subkey_8	: out std_logic_vector(48 downto 1);
+		
+		subkey_9	: out std_logic_vector(48 downto 1);
+		subkey_10	: out std_logic_vector(48 downto 1);
+		subkey_11 : out std_logic_vector(48 downto 1);
+		subkey_12	: out std_logic_vector(48 downto 1);
+		
+		subkey_13	: out std_logic_vector(48 downto 1);
+		subkey_14	: out std_logic_vector(48 downto 1);
+		subkey_15	: out std_logic_vector(48 downto 1);
+		subkey_16	: out std_logic_vector(48 downto 1)	
         );
     END COMPONENT;
     
@@ -22,12 +39,29 @@ ARCHITECTURE behavior OF topmodulebench IS
    signal start : std_logic := '0';
    signal clk : std_logic := '0';
    signal rst : std_logic := '1';
-   signal data_l : std_logic_vector(28 downto 1) := (others => '0');
-   signal data_r : std_logic_vector(28 downto 1) := (others => '0');
+	signal key	:  std_logic_vector(64 downto 1) := (others => '0');
 
  	--Outputs
-   signal rotated_out_l : std_logic_vector(28 downto 1);
-   signal rotated_out_r : std_logic_vector(28 downto 1);
+   		
+	signal	subkey_1	: std_logic_vector(48 downto 1);
+	signal	subkey_2	: std_logic_vector(48 downto 1);
+	signal	subkey_3	: std_logic_vector(48 downto 1);
+	signal	subkey_4	: std_logic_vector(48 downto 1);
+
+	signal	subkey_5	: std_logic_vector(48 downto 1);
+	signal	subkey_6	: std_logic_vector(48 downto 1);
+	signal	subkey_7	: std_logic_vector(48 downto 1);
+	signal	subkey_8	: std_logic_vector(48 downto 1);
+		
+	signal	subkey_9	: std_logic_vector(48 downto 1);
+	signal	subkey_10	: std_logic_vector(48 downto 1);
+	signal	subkey_11 : std_logic_vector(48 downto 1);
+	signal	subkey_12	: std_logic_vector(48 downto 1);
+		
+	signal	subkey_13	: std_logic_vector(48 downto 1);
+	signal	subkey_14	: std_logic_vector(48 downto 1);
+	signal	subkey_15	: std_logic_vector(48 downto 1);
+	signal	subkey_16	: std_logic_vector(48 downto 1)	;
 
    -- Clock period definitions
    constant clk_period : time := 10 ns;
@@ -39,10 +73,26 @@ BEGIN
           start => start,
           clk => clk,
           rst => rst,
-          data_l => data_l,
-          data_r => data_r,
-          rotated_out_l => rotated_out_l,
-          rotated_out_r => rotated_out_r
+			 key => key,
+          subkey_1 => subkey_1,
+			 subkey_2 => subkey_2,
+			 subkey_3 => subkey_3,
+			 subkey_4 => subkey_4,
+			 
+			 subkey_5 => subkey_5,
+			 subkey_6 => subkey_6,
+			 subkey_7 => subkey_7,
+			 subkey_8 => subkey_8,
+			 
+			  subkey_9 => subkey_9,
+			 subkey_10 => subkey_10,
+			 subkey_11 => subkey_11,
+			 subkey_12 => subkey_12,
+			 
+			  subkey_13 => subkey_13,
+			 subkey_14 => subkey_14,
+			 subkey_15 => subkey_15,
+			 subkey_16 => subkey_16
         );
 
    -- Clock process definitions
@@ -62,7 +112,7 @@ BEGIN
       wait for 100 ns;	
 		rst <= '0';
 		start<='1';
-		data_l <= "101010101010101010101000010";
+		key <= "0001001100110100010101110111100110011011101111001101111111110001"; -- http://www.herongyang.com/Cryptography/DES-Illustration-DES-Key-Schedule-Output.html example
       wait for clk_period*10;
 		
 
