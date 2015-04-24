@@ -1,33 +1,18 @@
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
+use IEEE.numeric_std.ALL;
 entity topmodule is
 
 port(start : in std_logic ;
 		clk : in std_logic;
 		rst : in std_logic;
+	
 		key	: in  std_logic_vector(64 downto 1);
-			
-		subkey_1	: out std_logic_vector(48 downto 1);
-		subkey_2	: out std_logic_vector(48 downto 1);
-		subkey_3	: out std_logic_vector(48 downto 1);
-		subkey_4	: out std_logic_vector(48 downto 1);
-
-		subkey_5	: out std_logic_vector(48 downto 1);
-		subkey_6	: out std_logic_vector(48 downto 1);
-		subkey_7	: out std_logic_vector(48 downto 1);
-		subkey_8	: out std_logic_vector(48 downto 1);
-		
-		subkey_9	: out std_logic_vector(48 downto 1);
-		subkey_10	: out std_logic_vector(48 downto 1);
-		subkey_11 : out std_logic_vector(48 downto 1);
-		subkey_12	: out std_logic_vector(48 downto 1);
-		
-		subkey_13	: out std_logic_vector(48 downto 1);
-		subkey_14	: out std_logic_vector(48 downto 1);
-		subkey_15	: out std_logic_vector(48 downto 1);
-		subkey_16	: out std_logic_vector(48 downto 1)	
+		M : in std_logic_vector( 63 downto 0);	
+	
+		correct_result : out std_logic;
+		send_next_word     : out std_logic; 
+		M_crypted : out std_logic_vector(63 downto 0)
 	);
 
 end topmodule;
@@ -41,7 +26,11 @@ component FSM
 		rst : in std_logic;
 		num_rot : out std_logic;
 		en_decal : out std_logic;
+		keysel : out unsigned(3 downto 0);
 		sel : out std_logic;
+		N : out std_logic;
+		send_next_word     : out std_logic;
+		cor_result			 : out std_logic;
 		en_rot : out std_logic
 	  );
 end component;
@@ -53,6 +42,20 @@ component PC1
 		  pc1_rh : out std_logic_vector (28 downto 1)
 	  );
 end component;
+
+
+
+
+component calcul 
+	port
+	(	entree  : in std_logic_vector(63 downto 0 );
+		clk : in std_logic;
+		rst : in std_logic;
+		clef : in std_logic_vector(47 downto 0 );
+		N : in std_logic;
+		sortie	: out std_logic_vector(63 downto 0 ));
+end component;
+
 
 component multimux
 	port(		
@@ -114,9 +117,30 @@ component SIPO
 end component;
 --signal 
 
-signal numrot , enrot , en_decal , sel: std_logic:='0';
+signal numrot , enrot , en_decal , N ,sel : std_logic:='0';
 signal inmux_l , inmux_r , outmux_l , outmux_r , pc1out_l , pc1out_r : std_logic_vector(28 downto 1 );
+signal keysel	: unsigned(3 downto 0);
 signal subkey :  std_logic_vector(48	 downto 1);
+signal calckey :  std_logic_vector(48	 downto 1);
+signal subkey_1 : std_logic_vector(48 downto 1);
+signal subkey_2 : std_logic_vector(48 downto 1);
+signal subkey_3 : std_logic_vector(48 downto 1);
+signal subkey_4 : std_logic_vector(48 downto 1);
+
+signal subkey_5 : std_logic_vector(48 downto 1);
+signal subkey_6 : std_logic_vector(48 downto 1);
+signal subkey_7 : std_logic_vector(48 downto 1);
+signal subkey_8 : std_logic_vector(48 downto 1);
+
+signal subkey_9 : std_logic_vector(48 downto 1);
+signal subkey_10 : std_logic_vector(48 downto 1);
+signal subkey_11 : std_logic_vector(48 downto 1);
+signal subkey_12 : std_logic_vector(48 downto 1);
+
+signal subkey_13 : std_logic_vector(48 downto 1);
+signal subkey_14 : std_logic_vector(48 downto 1);
+signal subkey_15 : std_logic_vector(48 downto 1);
+signal subkey_16 : std_logic_vector(48 downto 1);
 begin
 FSM1 : FSM port map (
 	
@@ -124,9 +148,25 @@ FSM1 : FSM port map (
 	clk => clk, 
 	rst => rst,
 	en_rot => enrot,
+	N => N,
+	send_next_word => send_next_word ,
 	en_decal => en_decal,
+	cor_result => correct_result,
 	num_rot => numrot	,
+	keysel=>keysel,
 	sel=>sel
+
+);
+
+calc: calcul port map (
+	
+		entree => M,
+		clk => clk, 
+		rst => rst,
+		clef => calckey,
+		N => N,
+		sortie => M_crypted
+
 
 );
 
@@ -197,6 +237,34 @@ SIPO1 : SIPO port map (
 		subkey_16	=> subkey_16
 
 );
+process (keysel,rst,subkey_1)
+begin
+if (rst='1') then
+	calckey<=(others=>'0');
+else
+case keysel is 
+	when "0000" => calckey <= subkey_1;
+	when x"1" => calckey <= subkey_2;
+	when x"2" => calckey <= subkey_3;
+	when x"3" => calckey <= subkey_4;
+	when x"4" => calckey <= subkey_5;
+	when x"5" => calckey <= subkey_6;
+	when x"6" => calckey <= subkey_7;
+	when x"7" => calckey <= subkey_8;
+	
+	when x"8" => calckey <= subkey_9;
+	when x"9" => calckey <= subkey_10;
+	when x"A" => calckey <= subkey_11;
+	when x"B" => calckey <= subkey_12;
+	
+	when x"C" => calckey <= subkey_13;
+	when x"D" => calckey <= subkey_14;
+	when x"E" => calckey <= subkey_15;
+	when x"F" => calckey <= subkey_16;
+	when others => calckey <= subkey_16;
+end case;
+end if;
+end process;
 
 end Behavioral;
 

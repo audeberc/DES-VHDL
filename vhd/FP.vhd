@@ -10,7 +10,7 @@ end FP;
 architecture Behavioral of FP is
 signal permut_data : std_logic_vector(64 downto 1);
 begin
-permut_data <= permut_data_lh & permut_data_rh;
+permut_data <= permut_data_rh & permut_data_lh;
 data_out(1)<=permut_data(40);
 data_out(2)<=permut_data(8);
 data_out(3)<=permut_data(48);

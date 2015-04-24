@@ -11,7 +11,11 @@ ARCHITECTURE behavior OF topmodulebench IS
 		clk : in std_logic;
 		rst : in std_logic;
 		key	: in  std_logic_vector(64 downto 1);
-			
+		
+					
+		N  , send_next_word   : out std_logic; 
+
+		
 		subkey_1	: out std_logic_vector(48 downto 1);
 		subkey_2	: out std_logic_vector(48 downto 1);
 		subkey_3	: out std_logic_vector(48 downto 1);
@@ -43,6 +47,10 @@ ARCHITECTURE behavior OF topmodulebench IS
 
  	--Outputs
    		
+				
+	signal	N ,send_next_word    :  std_logic; 
+ 
+	
 	signal	subkey_1	: std_logic_vector(48 downto 1);
 	signal	subkey_2	: std_logic_vector(48 downto 1);
 	signal	subkey_3	: std_logic_vector(48 downto 1);
@@ -74,6 +82,8 @@ BEGIN
           clk => clk,
           rst => rst,
 			 key => key,
+			 N => N,
+			 send_next_word => send_next_word ,	
           subkey_1 => subkey_1,
 			 subkey_2 => subkey_2,
 			 subkey_3 => subkey_3,
@@ -112,7 +122,7 @@ BEGIN
       wait for 100 ns;	
 		rst <= '0';
 		start<='1';
-		key <= "0001001100110100010101110111100110011011101111001101111111110001"; -- http://www.herongyang.com/Cryptography/DES-Illustration-DES-Key-Schedule-Output.html example
+		key <= "0001001100110100010101110111100110011011101111001101111111111111"; -- http://www.herongyang.com/Cryptography/DES-Illustration-DES-Key-Schedule-Output.html example
       wait for clk_period*10;
 		
 

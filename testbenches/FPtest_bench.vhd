@@ -21,8 +21,8 @@ BEGIN
         );
    process
    begin		
-	permut_data_lh <= "10101010101010101010101010101010";
-	permut_data_rh <= "10101010101010101010101010101010";
+	permut_data_lh <= "01000011010000100011001000110100";
+	permut_data_rh <= "00001010010011001101100110010101";
 
       wait;
    end process;

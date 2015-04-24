@@ -22,23 +22,22 @@ architecture behavior of rot_left is
 begin
 	process (clk)
 	begin
-		if (clk'event and clk='1' and en_rot = '1') then
-				if(num_rot = '0') then
-						rotnumb <= 1;
+		if (clk'event and clk='1' and en_rot='1') then
+
 						rotated_l <= rotate_right(unsigned(data_l) ,rotnumb );
 						rotated_r <= rotate_right(unsigned(data_r) ,rotnumb);
---						rotated_l <=(others=>'1');
---						rotated_r <=(others=>'0');
-				else
-						rotnumb <= 2;
-						rotated_l <= rotate_right(unsigned(data_l), rotnumb);
-						rotated_r <= rotate_right(unsigned(data_r), rotnumb);
---						rotated_l <=(others=>'0');
---						rotated_r <=(others=>'1');
-				end if;
+
 		end if;
 	end process;
-
+	
+	process(num_rot)
+	begin
+		if (num_rot='0') then
+			rotnumb <= 1;
+		else 
+			rotnumb <= 2;
+		end if;
+	end process;
 	rotated_out_l <= std_logic_vector(rotated_l);
 	rotated_out_r <= std_logic_vector(rotated_r);
 
