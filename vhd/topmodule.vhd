@@ -6,13 +6,13 @@ entity topmodule is
 port(start : in std_logic ;
 		clk : in std_logic;
 		rst : in std_logic;
-	
+		crypt_sel : in std_logic;
 		key	: in  std_logic_vector(64 downto 1);
 		M : in std_logic_vector( 63 downto 0);	
-	
+		
 		correct_result : out std_logic;
 		send_next_word     : out std_logic; 
-		M_crypted : out std_logic_vector(63 downto 0)
+		M_out : out std_logic_vector(63 downto 0)
 	);
 
 end topmodule;
@@ -117,11 +117,15 @@ component SIPO
 end component;
 --signal 
 
-signal numrot , enrot , en_decal , N ,sel : std_logic:='0';
+signal numrot , enrot, en_decal , N ,sel : std_logic:='0';
 signal inmux_l , inmux_r , outmux_l , outmux_r , pc1out_l , pc1out_r : std_logic_vector(28 downto 1 );
 signal keysel	: unsigned(3 downto 0);
 signal subkey :  std_logic_vector(48	 downto 1);
+
 signal calckey :  std_logic_vector(48	 downto 1);
+signal calckey_decrypt :  std_logic_vector(48	 downto 1);
+signal calckey_crypt :  std_logic_vector(48	 downto 1);
+
 signal subkey_1 : std_logic_vector(48 downto 1);
 signal subkey_2 : std_logic_vector(48 downto 1);
 signal subkey_3 : std_logic_vector(48 downto 1);
@@ -165,10 +169,11 @@ calc: calcul port map (
 		rst => rst,
 		clef => calckey,
 		N => N,
-		sortie => M_crypted
+		sortie => M_out
 
 
 );
+
 
 PC11 : PC1 port map (
 
@@ -240,30 +245,39 @@ SIPO1 : SIPO port map (
 process (keysel,rst,subkey_1)
 begin
 if (rst='1') then
-	calckey<=(others=>'0');
+	calckey_crypt<=(others=>'0');
+	calckey_decrypt<=(others=>'0');
 else
 case keysel is 
-	when "0000" => calckey <= subkey_1;
-	when x"1" => calckey <= subkey_2;
-	when x"2" => calckey <= subkey_3;
-	when x"3" => calckey <= subkey_4;
-	when x"4" => calckey <= subkey_5;
-	when x"5" => calckey <= subkey_6;
-	when x"6" => calckey <= subkey_7;
-	when x"7" => calckey <= subkey_8;
+	when "0000" => calckey_crypt <= subkey_1; calckey_decrypt<= subkey_16;
+	when x"1" => calckey_crypt <= subkey_2; calckey_decrypt<= subkey_15;
+	when x"2" => calckey_crypt <= subkey_3; calckey_decrypt<= subkey_14;
+	when x"3" => calckey_crypt <= subkey_4; calckey_decrypt<= subkey_13;
+	when x"4" => calckey_crypt <= subkey_5; calckey_decrypt<= subkey_12;
+	when x"5" => calckey_crypt <= subkey_6; calckey_decrypt<= subkey_11;
+	when x"6" => calckey_crypt <= subkey_7; calckey_decrypt<= subkey_10;
+	when x"7" => calckey_crypt <= subkey_8; calckey_decrypt<= subkey_9;
 	
-	when x"8" => calckey <= subkey_9;
-	when x"9" => calckey <= subkey_10;
-	when x"A" => calckey <= subkey_11;
-	when x"B" => calckey <= subkey_12;
+	when x"8" => calckey_crypt <= subkey_9; calckey_decrypt<= subkey_8;
+	when x"9" => calckey_crypt <= subkey_10; calckey_decrypt<= subkey_7;
+	when x"A" => calckey_crypt <= subkey_11; calckey_decrypt<= subkey_6;
+	when x"B" => calckey_crypt <= subkey_12; calckey_decrypt<= subkey_5;
 	
-	when x"C" => calckey <= subkey_13;
-	when x"D" => calckey <= subkey_14;
-	when x"E" => calckey <= subkey_15;
-	when x"F" => calckey <= subkey_16;
-	when others => calckey <= subkey_16;
+	when x"C" => calckey_crypt <= subkey_13; calckey_decrypt<= subkey_4;
+	when x"D" => calckey_crypt <= subkey_14; calckey_decrypt<= subkey_3;
+	when x"E" => calckey_crypt <= subkey_15; calckey_decrypt<= subkey_2;
+	when x"F" => calckey_crypt <= subkey_16; calckey_decrypt<= subkey_1;
+	when others => calckey_crypt <= subkey_16; calckey_decrypt<= subkey_1;
 end case;
 end if;
+end process;
+
+
+process (crypt_sel,calckey_crypt,calckey_decrypt)
+begin
+	if crypt_sel ='1' then calckey<=calckey_crypt; 
+	else calckey<=calckey_decrypt;
+	end if;
 end process;
 
 end Behavioral;

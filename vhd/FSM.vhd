@@ -7,7 +7,8 @@ entity FSM is
 port( start 				 : in std_logic ;
 		clk					 : in std_logic;
 		rst					 : in std_logic;
-		--
+		
+		
 		keysel				 : out unsigned(3 downto 0);
 		send_next_word     : out std_logic;
 		sel , en_decal , N : out std_logic;
@@ -37,14 +38,16 @@ signal next_ks : unsigned(3 downto 0);
 signal next_c1 : unsigned(2 downto 0);
 signal next_c2 : unsigned(1 downto 0);
 signal next_c3 : unsigned(4 downto 0);
+
 begin
----Process asynchrone
+
 nextstate_proc: process(current_state,current_c1,current_c2,current_c3,start)
 begin
 	next_correct <= '0';
 	cor_result<=current_correct;
 	next_ks <= "0000";
 	keysel <= current_ks;
+
 case current_state is	
 	when IDLE =>
 		if (start = '1') then 
@@ -89,6 +92,7 @@ case current_state is
 		send_next_word<='0';
 
 	when LOAD => -- en SIPO
+		
 		next_state <= ROT11;
 		--etat <= "0011";
 		next_c1<=current_c1;
@@ -163,9 +167,8 @@ case current_state is
 		en_decal <= '0';
 		N<='0';
 	   send_next_word<='1';
-		
 	when LOADMOT =>
-		next_state <= CALC;
+			next_state <= CALC;
 		--etat <= "0111";
 		next_c1<=current_c1;
 		next_c2<=current_c2;
@@ -185,6 +188,7 @@ case current_state is
 		else 
 			next_state <= LOADMOT;
 		end if;
+
 			next_correct<=current_correct;
 			--etat <= "1000";
 			next_c1<=current_c1;
