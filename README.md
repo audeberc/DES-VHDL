@@ -3,6 +3,7 @@
 
 FPGA implementation of the Data Encryption Standard algorithm, witten in VHDL.
 This module is not fully pipelined and thus targeted at low logic-block occupancy rather than maximal performances.
+Implemented on a DE-0 developpement board, interfaced with a Nios II soft processor (not included in this project).
 
 ### Module Architecture
 ![alt tag](https://raw.githubusercontent.com/audeberc/DES-VHDL/master/architecture.png)
